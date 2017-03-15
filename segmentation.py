@@ -9,11 +9,11 @@ import string
 import pylev
 
 imgdir_path = 'C:/Users/tigunova/Desktop/'#'C:/DVD_Potocnik_31.08.2016/real_tif/' #'/Users/tigunova/PycharmProjects/untitled1/imgs'
-json_dir = 'jsons'
+json_dir = 'jsons3'
 parts_path = 'C:/Users/tigunova/PycharmProjects/untitled1/segm/'
-im_num = '00000005142146'
+im_num = '00000005142008'
 
-koeff = 1
+koeff = 0.5
 itr =0
 
 def process_image(path, c_info, words):
@@ -32,7 +32,7 @@ def process_image(path, c_info, words):
     j = 0
     for c in c_info:
         this_crop = (c[1], c[2], c[3], c[4])
-        imm = im.crop([x for x in this_crop])
+        imm = im.crop([x*koeff for x in this_crop])
         imm.save(parts_path + im_num + '/' + str(itr) + '.png')
         #imm.show()
         #draw.rectangle(this_crop, outline='blue')
@@ -53,7 +53,7 @@ def get_squares(json_path,page):
 
 if __name__ == '__main__':
     page_num = 1
-    json_path = json_dir + '/' + im_num + "-words.json"
+    json_path = json_dir + '/' + im_num + ".json"
     direc = parts_path + im_num
     try:
         os.stat(direc)

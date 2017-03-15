@@ -71,6 +71,9 @@ def make_squares(path, out_path, json_path, dic, field_names):
     pages = []
     page_num = len(js["result"])
     kwords = []
+    if 'vatpercent' in field_names:
+        if dic['vatpercent'] == 0:
+            return sqrs, pages, page_num
     for page in range(len(js["result"])):
         words = [x for x in js['result'] if x['page'] == page+1][0]['words']
         prev = ''
@@ -142,7 +145,6 @@ def make_squares(path, out_path, json_path, dic, field_names):
     #im.save(out_path)
     #im.show()
 
-
     '''
     if len(sqrs)  > 0:
         for lab in range(page_num):
@@ -164,8 +166,8 @@ if __name__ == '__main__':
     res_data = []
     col = 0
 
-    field_name = "pcity" #a number of column
-    field_names = ['pcity']#, 'aftertax', 'commission', 'tripdate', 'duedate', 'traveller', 'voucherdate', 'duedate']
+    field_name = 'ccity' #a number of column
+    field_names = ['ccity']#, 'aftertax', 'commission', 'tripdate', 'duedate', 'traveller', 'voucherdate', 'duedate']
     #field_name = "pretax" #a number of column
     #field_names = ['pretax']
 
@@ -178,7 +180,7 @@ if __name__ == '__main__':
     #load csv
     reader = csv.reader(open('doc.csv'), delimiter=';')
     reader.next()
-    csv_dict = dict((int(rows[1]),list(rows[i] for i in range(0,31))) for rows in reader)
+    csv_dict = dict((int(rows[1]),list(rows[i] for i in range(0,36))) for rows in reader)
 
     for fil in os.listdir(json_dir):
         #fil = '07010000450027-words.json'
@@ -199,7 +201,7 @@ if __name__ == '__main__':
                 new_doc = dict()
                 new_doc['image_path'] = '/imgs/' + path.split('/')[-1][:-11] + '_Seite_' + str(i+1) + '_Bild_0001.tif'
                 new_doc['rects'] = [res_squrs[j] for j in range(len(res_squrs)) if res_pgs[j] == i]
-                if len(new_doc['rects']) > 0:
+                if len(new_doc['rects']) > 0 or 'vatpercent' in field_names:
                     res_data += [new_doc]
         except Exception as e:
             print(e)
