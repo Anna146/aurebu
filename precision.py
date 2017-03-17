@@ -122,6 +122,8 @@ def try_json(j_path, coords, field,doc_num, mdic, fname, page):
                 rec1['x1'] = rec2[3]
                 if rec1['x1'] > rec1['x2']:
                     break
+                predict += ' '
+        predict = predict.strip()
         if predict == '' and rec1['score'] > 0.5 and min_dist_wrd != '':
             predict = min_dist_wrd
         if date_ch and len(predict.split('.')[-1]) == 4:
@@ -129,11 +131,13 @@ def try_json(j_path, coords, field,doc_num, mdic, fname, page):
         if date_ch and len(predict.split('.')) != 3:
             predict = ''
         if predict != '':
-            if field in ['traveller', 'pcity', 'pstreet']:
+            if field in ['traveller', 'pcity', 'pstreet', 'ccity', 'cstreet', 'cname', 'currency']:
                 predict = ''.join([i for i in predict if i.isalpha()])
                 if predict != '':
                     predict = predict[0].upper() + predict[1:]
-            if date_ch or money_ch or field == 'pzip':
+                if field == 'currency' and len(predict) > 4:
+                    predict = ''
+            if date_ch or money_ch or field.find('zip') != -1:
                 predict = ''.join([i for i in predict if not i.isalpha()])
                 if len(''.join([i for i in predict if i.isdigit()])) == 0:
                     predict = ''
@@ -154,7 +158,7 @@ def filter_predictions(f_name, preds, confs):
 
 reader = csv.reader(open('doc.csv'), delimiter=';')
 reader.next()
-mdic = dict((int(rows[1]),list(rows[i] for i in range(0,31))) for rows in reader)
+mdic = dict((int(rows[1]),list(rows[i] for i in range(0,36))) for rows in reader)
 
 labels = load_labels()
 
@@ -164,7 +168,7 @@ for i in range(len(true)):
     stats = calc_match(true[i]['rects'],pred[i]['rects']) + stats
 '''
 
-field_names = ['traveller','voucherdate', 'pstreet', 'aftertax', 'commission', 'duedate', 'pretax', 'pcity', 'pzip']
+field_names = ['cname', 'ccity', 'cstreet', 'czip', 'traveller', 'tripdate',  'pstreet', 'pcity', 'pzip','voucherdate', 'pretax', 'commission', 'aftertax', 'currency', 'duedate']
 big_dict = dict()
 i = 0
 want = '07010000416093'

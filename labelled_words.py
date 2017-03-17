@@ -14,7 +14,7 @@ json_dir = 'jsons'
 parts_path = 'C:/Users/tigunova/PycharmProjects/untitled1/parts/'
 
 koeff = 1
-itr =0
+itr =1
 
 
 def process_image(path, c_info, words):
@@ -152,7 +152,8 @@ def make_squares(path, out_path, json_path, dic, field_names):
             #kwords1 = [kwords[j] for j in range(len(sqrs)) if pages[j] == lab]
             if len(sqrs1) > 0:# and lab == 0:
                 try:
-                    process_image(imgdir_path + '/' + path.split('/')[-1][:-11] + '_Seite_' + str(lab+1) + '_Bild_0001.tif', sqrs1, kwords)
+                    #process_image(imgdir_path + '/' + path.split('/')[-1][:-11] + '_Seite_' + str(lab+1) + '_Bild_0001.tif', sqrs1, kwords)
+                    process_image(imgdir_path + '/' + path.split('/')[-1].split('_')[0] + '_Seite_' + str(lab+1) + '_Bild_0001.tif', sqrs1, kwords)
                 except:
                     continue
     '''
@@ -166,8 +167,8 @@ if __name__ == '__main__':
     res_data = []
     col = 0
 
-    field_name = 'ccity' #a number of column
-    field_names = ['ccity']#, 'aftertax', 'commission', 'tripdate', 'duedate', 'traveller', 'voucherdate', 'duedate']
+    field_name = 'vatpercent' #a number of column
+    field_names = ['vatpercent']#, 'aftertax', 'commission', 'tripdate', 'duedate', 'traveller', 'voucherdate', 'duedate']
     #field_name = "pretax" #a number of column
     #field_names = ['pretax']
 
@@ -182,9 +183,11 @@ if __name__ == '__main__':
     reader.next()
     csv_dict = dict((int(rows[1]),list(rows[i] for i in range(0,36))) for rows in reader)
 
+    #for fil in os.listdir(imgdir_path):
     for fil in os.listdir(json_dir):
         #fil = '07010000450027-words.json'
         document_numb = fil[:-11]
+        #document_numb = fil.split('_')[0]
         col += 1
         #bad stuff to be removed
         if col < 0:
@@ -193,15 +196,20 @@ if __name__ == '__main__':
         labelling = dict((labels[j].lower(),table[j].lower()) for j in range(len(table)) if labels[j] != '' and labels[j] != '-')
         path = imgdir_path + '/' + fil
         json_path = json_dir + '/' + document_numb + "-words.json"
+        #json_path = json_dir + '/' + document_numb + ".json"
         out_path = "imgs_squares/labelled_"+ document_numb +".png"
-        res_squrs, res_pgs, page_num = make_squares(path, out_path, json_path, labelling, field_names)
+        try:
+            res_squrs, res_pgs, page_num = make_squares(path, out_path, json_path, labelling, field_names)
+        except:
+            continue
         #exit(0)
         try:
             for i in range(page_num): #here should be page_num
                 new_doc = dict()
                 new_doc['image_path'] = '/imgs/' + path.split('/')[-1][:-11] + '_Seite_' + str(i+1) + '_Bild_0001.tif'
+                #new_doc['image_path'] = '/imgs3/' + path.split('/')[-1].split('_')[0] + '_Seite_' + str(i+1) + '_Bild_0001.tif'
                 new_doc['rects'] = [res_squrs[j] for j in range(len(res_squrs)) if res_pgs[j] == i]
-                if len(new_doc['rects']) > 0 or 'vatpercent' in field_names:
+                if len(new_doc['rects']) > 0:
                     res_data += [new_doc]
         except Exception as e:
             print(e)

@@ -3,17 +3,21 @@ from sklearn.model_selection import ShuffleSplit
 import json
 import os
 
+imgdir_path3 = 'C:/DVD_Potocnik_31.08.2016/real_tif3'
 imgdir_path = 'C:/DVD_Potocnik_31.08.2016/real_tif'
 
 koef = 1
 
-field_name = 'ccity' #a number of column
+field_name = 'vatpercent' #a number of column
 direc = 'boxes_' + field_name + '/'
 
-js = json.load(open(direc + 'test_boxes1.json', 'r'))
+dirlist = os.listdir(imgdir_path)
+dirlist3 = os.listdir(imgdir_path3)
+
+js = json.load(open(direc + 'test_boxes1.json', 'r')) + json.load(open(direc + 'test_boxes1.json', 'r'))
 #js =js[:len(js)//2]#shrink
 print(len(js))
-js = [{'image_path':x['image_path'][1:], 'rects' : [{'x1':y['x1']*koef,'x2':y['x2']*koef,'y1':y['y1']*koef,'y2':y['y2']*koef} for y in x['rects']]} for x in js if x['image_path'][6:] in os.listdir(imgdir_path) and (len(x['rects']) > 0 or field_name == 'vatpercent')]
+js = [{'image_path':x['image_path'][1:], 'rects' : [{'x1':y['x1']*koef,'x2':y['x2']*koef,'y1':y['y1']*koef,'y2':y['y2']*koef} for y in x['rects']]} for x in js if (x['image_path'][6:] in dirlist or x['image_path'][7:] in dirlist3) and (len(x['rects']) > 0)]
 print(len(js))
 
 rs = ShuffleSplit(n_splits=1, test_size=.05, random_state=0)
