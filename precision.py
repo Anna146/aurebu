@@ -8,8 +8,8 @@ import csv
 import string
 
 eps = 10
-imgdir_path = 'C:/DVD_Potocnik_31.08.2016/real_tif/'
-json_dir = 'jsons'
+imgdir_path = 'C:/DVD_Potocnik_31.08.2016/real_tif3/'
+json_dir = 'jsons3'
 itr = 0
 
 def load_labels():
@@ -90,7 +90,7 @@ def try_json(j_path, coords, field,doc_num, mdic, fname, page):
     except:
         return '?','?'
     date_ch = 0 if field.find('date') == -1 else 1
-    money_ch = 1 if field in ['pretax', 'aftertax', 'commission'] else 0
+    money_ch = 1 if field in ['pretax', 'aftertax', 'commission', 'vatpercent'] else 0
     real = mdic[int(doc_num)][fname]
     words = [x for x in true_doc['result'] if x['page'] == page+1][0]['words']
     if len(coords) == 0 or len(words) < 70:
@@ -141,6 +141,9 @@ def try_json(j_path, coords, field,doc_num, mdic, fname, page):
                 predict = ''.join([i for i in predict if not i.isalpha()])
                 if len(''.join([i for i in predict if i.isdigit()])) == 0:
                     predict = ''
+                if field == 'vatpercent':
+                    if len(predict) > 2:
+                        predict = predict[:2]
             cur_preds += [predict]
             confs += [rec1['score']]
         predict = ''
@@ -168,7 +171,7 @@ for i in range(len(true)):
     stats = calc_match(true[i]['rects'],pred[i]['rects']) + stats
 '''
 
-field_names = ['cname', 'ccity', 'cstreet', 'czip', 'traveller', 'tripdate',  'pstreet', 'pcity', 'pzip','voucherdate', 'pretax', 'commission', 'aftertax', 'currency', 'duedate']
+field_names = ['aftertax', 'commission', 'tripdate', 'traveller', 'voucherdate', 'duedate', 'pretax', 'pstreet', 'pzip', 'pcity', 'cname', 'cstreet', 'czip', 'currency', 'ccity', 'vatpercent']
 big_dict = dict()
 i = 0
 want = '07010000416093'
@@ -196,7 +199,7 @@ for name in field_names:
         ps1 = []
         confs1 = []
         for pr in files_dic[document_numb]:
-            json_path = json_dir + '/' + document_numb + "-words.json"
+            json_path = json_dir + '/' + document_numb + ".json"
             r1, ps11, confs11 = try_json(json_path, pr['rects'],name, document_numb,mdic, labels[name], int(pr['image_path'].split('_')[2])-1)
             ps1 += ps11
             confs1 += confs11

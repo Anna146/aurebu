@@ -9,8 +9,8 @@ import string
 import translitcodec
 import pylev
 
-imgdir_path = 'C:/DVD_Potocnik_31.08.2016/real_tif' #'/Users/tigunova/PycharmProjects/untitled1/imgs'
-json_dir = 'jsons'
+imgdir_path = 'C:/DVD_Potocnik_31.08.2016/real_tif3' #'/Users/tigunova/PycharmProjects/untitled1/imgs'
+json_dir = 'jsons3'
 parts_path = 'C:/Users/tigunova/PycharmProjects/untitled1/parts/'
 
 koeff = 1
@@ -159,7 +159,8 @@ def make_squares(path, out_path, json_path, dic, field_names):
     '''
     return sqrs, pages, page_num
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
+def labelled_worder(field_name):
     labels = load_labels()
     #pprint.pprint(labelling)
     pages = [0,1] #never do that please its hardcoded
@@ -167,8 +168,8 @@ if __name__ == '__main__':
     res_data = []
     col = 0
 
-    field_name = 'vatpercent' #a number of column
-    field_names = ['vatpercent']#, 'aftertax', 'commission', 'tripdate', 'duedate', 'traveller', 'voucherdate', 'duedate']
+    #field_name = 'aftertax' #a number of column
+    field_names = [field_name]#['aftertax']#, 'aftertax', 'commission', 'tripdate', 'duedate', 'traveller', 'voucherdate', 'duedate']
     #field_name = "pretax" #a number of column
     #field_names = ['pretax']
 
@@ -183,11 +184,11 @@ if __name__ == '__main__':
     reader.next()
     csv_dict = dict((int(rows[1]),list(rows[i] for i in range(0,36))) for rows in reader)
 
-    #for fil in os.listdir(imgdir_path):
-    for fil in os.listdir(json_dir):
+    for fil in os.listdir(imgdir_path):
+    #for fil in os.listdir(json_dir):
         #fil = '07010000450027-words.json'
-        document_numb = fil[:-11]
-        #document_numb = fil.split('_')[0]
+        #document_numb = fil[:-11]
+        document_numb = fil.split('_')[0]
         col += 1
         #bad stuff to be removed
         if col < 0:
@@ -195,8 +196,8 @@ if __name__ == '__main__':
         table = csv_dict[int(document_numb)]
         labelling = dict((labels[j].lower(),table[j].lower()) for j in range(len(table)) if labels[j] != '' and labels[j] != '-')
         path = imgdir_path + '/' + fil
-        json_path = json_dir + '/' + document_numb + "-words.json"
-        #json_path = json_dir + '/' + document_numb + ".json"
+        #json_path = json_dir + '/' + document_numb + "-words.json"
+        json_path = json_dir + '/' + document_numb + ".json"
         out_path = "imgs_squares/labelled_"+ document_numb +".png"
         try:
             res_squrs, res_pgs, page_num = make_squares(path, out_path, json_path, labelling, field_names)
@@ -206,8 +207,8 @@ if __name__ == '__main__':
         try:
             for i in range(page_num): #here should be page_num
                 new_doc = dict()
-                new_doc['image_path'] = '/imgs/' + path.split('/')[-1][:-11] + '_Seite_' + str(i+1) + '_Bild_0001.tif'
-                #new_doc['image_path'] = '/imgs3/' + path.split('/')[-1].split('_')[0] + '_Seite_' + str(i+1) + '_Bild_0001.tif'
+                #new_doc['image_path'] = '/imgs/' + path.split('/')[-1][:-11] + '_Seite_' + str(i+1) + '_Bild_0001.tif'
+                new_doc['image_path'] = '/experiment/imgs3/' + path.split('/')[-1].split('_')[0] + '_Seite_' + str(i+1) + '_Bild_0001.tif'
                 new_doc['rects'] = [res_squrs[j] for j in range(len(res_squrs)) if res_pgs[j] == i]
                 if len(new_doc['rects']) > 0:
                     res_data += [new_doc]
@@ -222,7 +223,7 @@ if __name__ == '__main__':
                 json.dump(res_data,outfile)
         #print(path)
 
-    with open(direc + 'test_boxes1.json', 'w') as outfile:
+    with open(direc + '3test_boxes1.json', 'w') as outfile:
         json.dump(res_data,outfile)
 
 
