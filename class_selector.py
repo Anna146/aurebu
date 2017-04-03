@@ -41,6 +41,7 @@ with open('precision_single.txt', 'r') as f:
         big_table_prec[clas] += [fields[4]]
         big_table_rec[clas] += [fields[3]]
 
+
 pprint.pprint(big_table_prec)
 with open('precision_tab.csv', 'wb') as fp:
     a = csv.writer(fp, delimiter=' ')
