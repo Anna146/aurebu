@@ -1,0 +1,13 @@
+currency,13
+aftertax,2
+pstreet,8
+czip,12
+pzip,9
+traveller,5
+voucherdate,6
+pcity,10
+commission,3
+tripdate,4
+cname,11
+ccity,14
+duedate,7

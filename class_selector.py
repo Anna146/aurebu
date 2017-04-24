@@ -6,7 +6,7 @@ all_fields = ['aftertax', 'commission', 'tripdate', 'traveller', 'voucherdate', 
 big_table_prec = dict((x,list()) for x in all_fields)
 big_table_rec = dict((x,list()) for x in all_fields)
 
-for amount in [18, 15, 12, 9]:
+for amount in [18, 16, 11, 10]:
     f = open("%d.precision.txt" % amount, 'r')
     with open('reference_dict_%d.txt' % amount, 'r') as fil:
         reader = csv.reader(fil)
@@ -28,10 +28,11 @@ for amount in [18, 15, 12, 9]:
         big_table_prec[field] += [with_names[field][0]] if field in with_names else [-1]
         big_table_rec[field] += [with_names[field][1]] if field in with_names else [-1]
 
-
-    #print(with_names)
-    #print(sorted(zip(c,p), key=lambda y: -float(y[1])))
-    #print('Biggest precision: ' + str(max(zip(c,p), key = lambda y: y[1])))
+    '''
+    print(with_names)
+    print(sorted(zip(c,p), key=lambda y: -float(y[1])))
+    print('Biggest precision: ' + str(max(zip(c,p), key = lambda y: y[1])))
+    '''
     f.close()
 
 with open('precision_single.txt', 'r') as f:

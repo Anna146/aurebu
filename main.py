@@ -5,5 +5,5 @@ all_fields = ['aftertax', 'commission', 'tripdate', 'traveller', 'voucherdate', 
 #all_fields = ['ccity']
 for name in all_fields:
     print('processing: '+name)
-    labelled_words.labelled_worder(name)
+    #labelled_words.labelled_worder(name)
     tr_test_split.tr_test_splitter(name)

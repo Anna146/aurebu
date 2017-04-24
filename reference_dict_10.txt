@@ -1,0 +1,6 @@
+voucherdate,4
+pzip,5
+traveller,3
+ccity,6
+currency,7
+tripdate,2

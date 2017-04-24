@@ -208,7 +208,7 @@ def labelled_worder(field_name):
             for i in range(page_num): #here should be page_num
                 new_doc = dict()
                 #new_doc['image_path'] = '/imgs/' + path.split('/')[-1][:-11] + '_Seite_' + str(i+1) + '_Bild_0001.tif'
-                new_doc['image_path'] = '/experiment/imgs3/' + path.split('/')[-1].split('_')[0] + '_Seite_' + str(i+1) + '_Bild_0001.tif'
+                new_doc['image_path'] = '/imgs3/' + path.split('/')[-1].split('_')[0] + '_Seite_' + str(i+1) + '_Bild_0001.tif'
                 new_doc['rects'] = [res_squrs[j] for j in range(len(res_squrs)) if res_pgs[j] == i]
                 if len(new_doc['rects']) > 0:
                     res_data += [new_doc]

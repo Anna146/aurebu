@@ -87,12 +87,13 @@ def try_json(j_path, coords, field,doc_num, mdic, fname, page):
     thr = 0.01
     try:
         true_doc = json.load(open(j_path, 'r'))
+        date_ch = 0 if field.find('date') == -1 else 1
+        money_ch = 1 if field in ['pretax', 'aftertax', 'commission', 'vatpercent'] else 0
+        real = mdic[int(doc_num)][fname]
+        words = [x for x in true_doc['result'] if x['page'] == page+1][0]['words']
     except:
-        return '?','?'
-    date_ch = 0 if field.find('date') == -1 else 1
-    money_ch = 1 if field in ['pretax', 'aftertax', 'commission', 'vatpercent'] else 0
-    real = mdic[int(doc_num)][fname]
-    words = [x for x in true_doc['result'] if x['page'] == page+1][0]['words']
+        return '?','?','?'
+
     if len(coords) == 0 or len(words) < 70:
         return real, [], []
     predict = ''
@@ -201,6 +202,8 @@ for name in field_names:
         for pr in files_dic[document_numb]:
             json_path = json_dir + '/' + document_numb + ".json"
             r1, ps11, confs11 = try_json(json_path, pr['rects'],name, document_numb,mdic, labels[name], int(pr['image_path'].split('_')[2])-1)
+            if ps11 == '?':
+                continue
             ps1 += ps11
             confs1 += confs11
         if len(ps1) == 0:
